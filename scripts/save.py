@@ -5,6 +5,7 @@ from tqdm import tqdm
 
 from gcs import read_json
 
+# Still hardcoded, when moving to production this could be improved...
 bbc_uri_mapping = [{'bbc_lvl1': 'Algemene financiering',
                     'uri': 'http://data.lblod.info/ML2GrowClassification/b595897a-3a3e-406e-840d-69fa7020fc85'},
                    {'bbc_lvl1': 'Algemeen bestuur',
@@ -52,17 +53,37 @@ def main(endpoint):
                 )
 
             q = f"""
-            DELETE {{
+                PREFIX ext: <http://mu.semte.ch/vocabularies/ext/>
+            
+                DELETE {{
                 GRAPH <http://mu.semte.ch/application> {{
-                    <{file_name}> ext:BBC_scoring ?oldscore .
+                 <{file_name}> ext:BBC_scoring ?bbc .
+                 <{file_name}> ext:ingestedMl2GrowSmartRegulationsBBC ?sbr .
+                 ?bbc ext:score ?bbc_score .
+                ?bbc <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?b .
+                ?b ext:nl_taxonomy ?bbc_taxonomie .
+                    }}
                 }}
-            }}
-            WHERE {{
-                GRAPH <http://mu.semte.ch/application> {{
-                    OPTIONAL {{ <{file_name}> ext:BBC_scoring ?oldscore . }}
-                }}
+                
+                WHERE {{
+                 <{file_name}> ext:BBC_scoring ?bbc .
+                 <{file_name}> ext:ingestedMl2GrowSmartRegulationsBBC ?sbr .
+                 ?bbc ext:score ?bbc_score .
+                ?bbc <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?b .
+                ?b ext:nl_taxonomy ?bbc_taxonomie .
             }}
             """
+
+            # DELETE {{
+            #     GRAPH <http://mu.semte.ch/application> {{
+            #         <{file_name}> ext:BBC_scoring ?oldscore .
+            #     }}
+            # }}
+            # WHERE {{
+            #     GRAPH <http://mu.semte.ch/application> {{
+            #         OPTIONAL {{ <{file_name}> ext:BBC_scoring ?oldscore . }}
+            #     }}
+            # }}
             r = requests.post(endpoint, data={"query": q}, headers=headers)
 
             q = f"""
