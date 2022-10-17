@@ -1,7 +1,13 @@
 import torch
 
 
+# currently not in use, was used in a few experimental stages of this project
+
 class Dataset_from_DF:
+    """
+    Helper class to create dataset for pytorch data loader
+    """
+
     def __init__(self, dataframe, tokenizer, max_length, device, text_column="text"):
         self.len = len(dataframe)
         self.data = dataframe.reset_index()
@@ -14,13 +20,13 @@ class Dataset_from_DF:
         text = str(self.data[self.text_column][index])
         text = " ".join(text.split())
         inputs = self.tokenizer.encode_plus("het" + text[:10_000],  # temp fix to not create empty tensor lists.
-            None, add_special_tokens=False, # max_length=self.max_length,
-            # padding='max_length',
-            # return_token_type_ids=True,
-            # truncation=True,
-            # return_overflowing_tokens=True,
-            # num_truncated_tokens=True
-        )
+                                            None, add_special_tokens=False,  # max_length=self.max_length,
+                                            # padding='max_length',
+                                            # return_token_type_ids=True,
+                                            # truncation=True,
+                                            # return_overflowing_tokens=True,
+                                            # num_truncated_tokens=True
+                                            )
 
         input_ids = inputs["input_ids"]
         i = 0

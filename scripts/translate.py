@@ -11,7 +11,12 @@ from dataset import Dataset_from_DF
 from gcs import read_json, write_json
 
 
+# class is currently not in use since we bypassed this one in alter experiments --> results did not apear to be acceptable
+
 class Translator:
+    """
+    Class that acts as the translator
+    """
 
     def __init__(self, translation_model: str, df: pd.DataFrame):
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")

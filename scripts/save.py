@@ -1,11 +1,12 @@
+import uuid
+
 import fire
 import requests
-import uuid
 from tqdm import tqdm
 
 from gcs import read_json
 
-# Still hardcoded, when moving to production this could be improved...
+# Still hardcoded, when moving to production this could be improved... by using more intuitive uris
 bbc_uri_mapping = [{'bbc_lvl1': 'Algemene financiering',
                     'uri': 'http://data.lblod.info/ML2GrowClassification/b595897a-3a3e-406e-840d-69fa7020fc85'},
                    {'bbc_lvl1': 'Algemeen bestuur',
@@ -35,6 +36,14 @@ headers = {
 
 
 def main(endpoint):
+    """
+    Function that creates and executes the DELETE WHERE and INSERT statements
+
+    :param endpoint: url to the sparql endpoint
+    :return:
+    """
+
+    # load the file containing the classified content
     records = read_json(file_name="classified.json")
 
     uris, query_extension = [], []
@@ -84,7 +93,12 @@ def main(endpoint):
             #         OPTIONAL {{ <{file_name}> ext:BBC_scoring ?oldscore . }}
             #     }}
             # }}
+
+            # request for the sparql DELETE
             r = requests.post(endpoint, data={"query": q}, headers=headers)
+
+            if r.status_code != 200:
+                print(f"[FAILURE] {50 * '-'} /n {q} /n {50 * '-'}")
 
             q = f"""
             PREFIX ext: <http://mu.semte.ch/vocabularies/ext/>
@@ -101,8 +115,13 @@ def main(endpoint):
     
             """
 
+            # request for the sparql INSERT
             r = requests.post(endpoint, data={"query": q}, headers=headers)
+
+            if r.status_code != 200:
+                print(f"[FAILURE] {50 * '-'} /n {q} /n {50 * '-'}")
         except Exception as ex:
+            print(r.text)
             print(ex)
 
 
