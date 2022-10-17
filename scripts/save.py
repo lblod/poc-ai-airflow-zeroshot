@@ -46,6 +46,10 @@ def main(endpoint):
     # load the file containing the classified content
     records = read_json(file_name="classified.json")
 
+    # If no records are available skip
+    if not records:
+        return None
+
     uris, query_extension = [], []
     for record in tqdm(records):
         try:

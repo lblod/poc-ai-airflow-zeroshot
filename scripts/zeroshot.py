@@ -22,6 +22,10 @@ def classify():
     # Load the text content to do inference on.
     records = read_json(file_name="export.json")
 
+    # If no records are available skip
+    if not records:
+        return None
+
     # create empty list for the updated content
     updated = []
 
