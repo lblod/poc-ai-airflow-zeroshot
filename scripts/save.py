@@ -73,8 +73,6 @@ def main(endpoint):
                  <{file_name}> ext:BBC_scoring ?bbc .
                  <{file_name}> ext:ingestedMl2GrowSmartRegulationsBBC ?sbr .
                  ?bbc ext:score ?bbc_score .
-                ?bbc <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?b .
-                ?b ext:nl_taxonomy ?bbc_taxonomie .
                     }}
                 }}
                 
@@ -82,8 +80,6 @@ def main(endpoint):
                  <{file_name}> ext:BBC_scoring ?bbc .
                  <{file_name}> ext:ingestedMl2GrowSmartRegulationsBBC ?sbr .
                  ?bbc ext:score ?bbc_score .
-                ?bbc <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?b .
-                ?b ext:nl_taxonomy ?bbc_taxonomie .
             }}
             """
 
