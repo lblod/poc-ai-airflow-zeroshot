@@ -4,10 +4,11 @@ import requests
 from gcs import write_json
 
 
-def load(endpoint, query):
+def load(endpoint: str, query: str, filename: str):
     """
-    This executes a sparql query and laods it straight into pandas.
+    This executes a sparql query and loads it straight into pandas.
 
+    :param filename: the filename to write the file as
     :param endpoint: The url where to sparql endpoint can be found
     :param query: The query to execute on the given sparql endpoint.
     :return: Nothing
@@ -21,7 +22,7 @@ def load(endpoint, query):
     # processing data from the response to the pandas data frame and saving it
     data = r.json()["results"]["bindings"]
     records = [{k: v['value'] for k, v in i.items()} for i in data]
-    write_json(file_name="export.json", content=records)
+    write_json(file_name=f"{filename}.json", content=records)
 
 
 if __name__ == '__main__':
