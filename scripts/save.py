@@ -50,10 +50,10 @@ def main(endpoint):
     if not records:
         return None
 
-    uris, query_extension = [], []
     for record in tqdm(records):
         try:
             file_name = record["thing"]
+            uris, query_extension = [], []
             n = {new_mapping[k]: v for k, v in record["bbc"].items()}
             for k, v in n.items():
                 uri = f"http://data.lblod.info/ML2GrowClassification/score/{str(uuid.uuid4())}"
